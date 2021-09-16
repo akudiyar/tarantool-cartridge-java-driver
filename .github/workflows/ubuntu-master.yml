@@ -20,9 +20,10 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: Set up JDK 1.8
-      uses: actions/setup-java@v1
+      uses: actions/setup-java@v2
       with:
-        java-version: 1.8
+        distribution: 'zulu'
+        java-version: 8
 
     - name: Cache Maven packages
       uses: actions/cache@v2
@@ -40,11 +41,11 @@ jobs:
           ${{ runner.os }}-docker-layer-cache-
 
     - name: Build with Maven
-      run: mvn -B verify --file pom.xml
+      run: ./mvnw -B verify
 
     - name: Run integration tests
       env:
         TARANTOOL_VERSION: ${{ matrix.tarantool-version }}
         TARANTOOL_SERVER_USER: root
         TARANTOOL_SERVER_GROUP: root
-      run: mvn -B test -P integration --file pom.xml
+      run: ./mvnw -B test -P integration
